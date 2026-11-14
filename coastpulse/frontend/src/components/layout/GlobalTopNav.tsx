@@ -36,12 +36,14 @@ interface GlobalTopNavProps {
   activeDestination: GlobalNavigationDestination;
   onNavigate: (destination: GlobalNavigationDestination) => void;
   activeLocation?: CoastalLocation | null;
+  liveCoords?: [number, number];
 }
 
 export const GlobalTopNav: React.FC<GlobalTopNavProps> = ({
   activeDestination,
   onNavigate,
   activeLocation,
+  liveCoords,
 }) => {
   const [marineTelemetry, setMarineTelemetry] = useState<{
     wave_height_m: number;
@@ -60,18 +62,23 @@ export const GlobalTopNav: React.FC<GlobalTopNavProps> = ({
     };
   } | null>(null);
 
-  // Re-fetch telemetry whenever the user selects or zooms to a new Coastal Observatory
+  // Re-fetch telemetry whenever the map center coordinates or selected observatory changes
   useEffect(() => {
-    const lat = activeLocation ? activeLocation.coordinates[1] : 10.767;
-    const lon = activeLocation ? activeLocation.coordinates[0] : 79.843;
+    const lon = liveCoords ? liveCoords[0] : activeLocation ? activeLocation.coordinates[0] : 79.843;
+    const lat = liveCoords ? liveCoords[1] : activeLocation ? activeLocation.coordinates[1] : 10.767;
 
-    fetch(`http://127.0.0.1:8000/api/v1/marine/current?lat=${lat}&lon=${lon}`)
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data) setMarineTelemetry(data);
-      })
-      .catch(() => {});
-  }, [activeLocation]);
+    // Throttle / debounce network queries to prevent spamming while panning
+    const timer = setTimeout(() => {
+      fetch(`http://127.0.0.1:8000/api/v1/marine/current?lat=${lat.toFixed(3)}&lon=${lon.toFixed(3)}`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data) setMarineTelemetry(data);
+        })
+        .catch(() => {});
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [liveCoords, activeLocation]);
 
   const destinations: Array<{
     id: GlobalNavigationDestination;

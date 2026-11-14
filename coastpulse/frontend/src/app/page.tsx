@@ -33,6 +33,9 @@ export default function Home() {
   const [hvVisible, setHvVisible] = useState<boolean>(true);
   const [inspectedPixel, setInspectedPixel] = useState<any>(null);
 
+  // Live Map Cursor Coordinates for Dynamic Global Ocean Telemetry
+  const [liveMapCoords, setLiveMapCoords] = useState<[number, number]>([79.843, 10.767]);
+
   // Dedicated Comparison Indices
   const [compT1Index, setCompT1Index] = useState<number>(0);
   const [compT2Index, setCompT2Index] = useState<number>(1);
@@ -50,6 +53,7 @@ export default function Home() {
         activeDestination={activeDestination}
         onNavigate={(dest) => setActiveDestination(dest)}
         activeLocation={selectedLocation}
+        liveCoords={liveMapCoords}
       />
 
       {/* 2. Middle Main Workspace Body */}
@@ -93,7 +97,11 @@ export default function Home() {
               ) : (
                 <GlobalObservatoryMap
                   selectedLocation={selectedLocation}
-                  onSelectLocation={(loc) => setSelectedLocation(loc)}
+                  onSelectLocation={(loc) => {
+                    setSelectedLocation(loc);
+                    setLiveMapCoords(loc.coordinates);
+                  }}
+                  onMapMove={(lon, lat) => setLiveMapCoords([lon, lat])}
                 />
               )}
             </>

@@ -25,6 +25,7 @@ interface GlobalObservatoryMapProps {
   selectedLocation: CoastalLocation | null;
   onSelectLocation: (loc: CoastalLocation) => void;
   onCustomAoiDrawn?: (bbox: [number, number, number, number]) => void;
+  onMapMove?: (lon: number, lat: number) => void;
 }
 
 export type BasemapMode = "highres" | "nasa-gibs-live" | "nasa-night-lights";
@@ -33,6 +34,7 @@ export const GlobalObservatoryMap: React.FC<GlobalObservatoryMapProps> = ({
   selectedLocation,
   onSelectLocation,
   onCustomAoiDrawn,
+  onMapMove,
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -286,6 +288,13 @@ export const GlobalObservatoryMap: React.FC<GlobalObservatoryMapProps> = ({
 
     map.on("mousemove", (e) => {
       setCoords([e.lngLat.lng, e.lngLat.lat]);
+    });
+
+    map.on("moveend", () => {
+      const center = map.getCenter();
+      if (onMapMove) {
+        onMapMove(center.lng, center.lat);
+      }
     });
 
     map.on("zoom", () => {
