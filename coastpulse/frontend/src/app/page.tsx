@@ -33,6 +33,10 @@ export default function Home() {
   const [hvVisible, setHvVisible] = useState<boolean>(true);
   const [inspectedPixel, setInspectedPixel] = useState<any>(null);
 
+  // Dedicated Comparison Indices
+  const [compT1Index, setCompT1Index] = useState<number>(0);
+  const [compT2Index, setCompT2Index] = useState<number>(1);
+
   // When an observatory is selected from Search or Studies
   const handleSelectObservatory = (loc: CoastalLocation) => {
     setSelectedLocation(loc);
@@ -102,10 +106,10 @@ export default function Home() {
                 { id: "nisar-t1", date: "2026-10-30", label: "NISAR L2 GCOV (Baseline)", granuleId: "NISAR_L2_PR_GCOV_034_084_A_20261030" },
                 { id: "nisar-t2", date: "2026-11-11", label: "NISAR L2 GCOV (Repeat)", granuleId: "NISAR_L2_PR_GCOV_035_084_A_20261111" },
               ]}
-              t1Index={0}
-              t2Index={1}
-              onT1Change={() => {}}
-              onT2Change={() => {}}
+              t1Index={compT1Index}
+              t2Index={compT2Index}
+              onT1Change={(idx) => setCompT1Index(idx)}
+              onT2Change={(idx) => setCompT2Index(idx)}
               onBackToMap={() => setActiveDestination("explore")}
             />
           )}

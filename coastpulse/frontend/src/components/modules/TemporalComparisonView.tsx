@@ -52,9 +52,13 @@ export const TemporalComparisonView: React.FC = () => {
   });
 
   const handleExportComparison = () => {
-    alert(
-      `Exporting georeferenced comparison GeoTIFF between ${dates[selectedDateIndexA].date} and ${dates[selectedDateIndexB].date}...`
-    );
+    const url = "http://127.0.0.1:8000/api/v1/comparisons/download/nisar-nagapattinam-change";
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `nisar_change_${dates[selectedDateIndexA].date}_${dates[selectedDateIndexB].date}.tif`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (

@@ -87,9 +87,15 @@ export const DedicatedComparisonWorkspace: React.FC<DedicatedComparisonWorkspace
 
           <button
             onClick={() => {
-              alert(`Exporting calibrated bitemporal GeoTIFF difference between ${t1.date} and ${t2.date}...`);
+              const url = "http://127.0.0.1:8000/api/v1/comparisons/download/nisar-nagapattinam-change";
+              const link = document.createElement("a");
+              link.href = url;
+              link.download = `nisar_change_diff_${t1.date}_${t2.date}.tif`;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
             }}
-            className="px-4 py-2 bg-gradient-to-r from-[#00e5ff] to-[#ff9933] hover:from-[#33ecff] hover:to-[#ffa84d] text-slate-950 font-black rounded-lg text-xs flex items-center gap-1.5 transition-all shadow-lg shadow-[#00e5ff]/20 font-sans cursor-pointer"
+            className="px-3.5 py-1.5 bg-[#ff8c2b] hover:bg-[#ffa34d] text-slate-950 font-bold rounded-lg text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
           >
             <Download className="h-3.5 w-3.5 text-slate-950" />
             <span>Export Diff GeoTIFF</span>

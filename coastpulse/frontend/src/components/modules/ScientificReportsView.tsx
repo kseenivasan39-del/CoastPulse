@@ -18,9 +18,13 @@ export const ScientificReportsView: React.FC = () => {
   const [selectedFormat, setSelectedFormat] = useState<"PDF" | "JSON">("PDF");
 
   const handleExport = () => {
-    alert(
-      `Generating reproducible peer-reviewed report (${selectedFormat}) with SHA-256 cryptographic provenance manifests...`
-    );
+    if (selectedFormat === "PDF") {
+      const url = "http://127.0.0.1:8000/api/v1/reports/REP-2026-NAGAPATTINAM-NISAR-001/pdf";
+      window.open(url, "_blank");
+    } else {
+      const url = "http://127.0.0.1:8000/api/v1/reports/export/statistics.csv";
+      window.open(url, "_blank");
+    }
   };
 
   return (
