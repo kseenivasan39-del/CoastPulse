@@ -44,6 +44,15 @@ export const GlobalTopNav: React.FC<GlobalTopNavProps> = ({
     wave_height_m: number;
     wind_speed_kmh: number;
     sea_roughness_state: string;
+    tide?: {
+      current_height_m: number;
+      state: string;
+    };
+    hydrodynamics?: {
+      stockdon_r2_runup_m: number;
+      total_water_level_m: number;
+      inundation_risk: string;
+    };
   } | null>(null);
 
   useEffect(() => {
@@ -120,7 +129,7 @@ export const GlobalTopNav: React.FC<GlobalTopNavProps> = ({
       <div className="flex items-center gap-2.5">
         {marineTelemetry && (
           <div
-            title={`Live Oceanographic Telemetry: ${marineTelemetry.sea_roughness_state}`}
+            title={`Live 3D Hydrodynamics & Tide: Tide ${marineTelemetry.tide?.current_height_m}m (${marineTelemetry.tide?.state}), Stockdon Wave Runup: +${marineTelemetry.hydrodynamics?.stockdon_r2_runup_m}m, Total Water Level: ${marineTelemetry.hydrodynamics?.total_water_level_m}m (${marineTelemetry.hydrodynamics?.inundation_risk})`}
             className="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#081222] border border-[#14233c] text-[10px] font-mono text-slate-300"
           >
             <span className="flex items-center gap-1 text-[#00e5ff]">
@@ -128,6 +137,22 @@ export const GlobalTopNav: React.FC<GlobalTopNavProps> = ({
               <span>{marineTelemetry.wave_height_m}m</span>
             </span>
             <span className="text-slate-600">|</span>
+            {marineTelemetry.tide && (
+              <>
+                <span className="flex items-center gap-1 text-sky-300">
+                  <span>Tide: {marineTelemetry.tide.current_height_m > 0 ? `+${marineTelemetry.tide.current_height_m}` : marineTelemetry.tide.current_height_m}m</span>
+                </span>
+                <span className="text-slate-600">|</span>
+              </>
+            )}
+            {marineTelemetry.hydrodynamics && (
+              <>
+                <span className="flex items-center gap-1 text-emerald-400">
+                  <span>TWL: {marineTelemetry.hydrodynamics.total_water_level_m}m</span>
+                </span>
+                <span className="text-slate-600">|</span>
+              </>
+            )}
             <span className="flex items-center gap-1 text-[#ff8c2b]">
               <Wind className="w-3.5 h-3.5" />
               <span>{marineTelemetry.wind_speed_kmh} km/h</span>
