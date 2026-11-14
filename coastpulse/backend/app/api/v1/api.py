@@ -14,6 +14,7 @@ from app.api.v1.endpoints import (
     geospatial,
     discovery,
     event_watch,
+    marine,
 )
 
 api_router = APIRouter()
@@ -24,6 +25,7 @@ api_router.include_router(auth.router, prefix="/auth", tags=["Authentication & U
 api_router.include_router(workspaces.router, prefix="/workspaces", tags=["Research Workspaces"])
 api_router.include_router(discovery.router, prefix="/discovery", tags=["Earth Observation Discovery & Ingestion"])
 api_router.include_router(event_watch.router, prefix="/event-watch", tags=["Global Coastal Event Watch"])
+api_router.include_router(marine.router, prefix="/marine", tags=["Oceanographic & Marine Telemetry"])
 api_router.include_router(datasets.router, prefix="/datasets", tags=["Dataset Catalogue"])
 api_router.include_router(acquisitions.router, prefix="/acquisitions", tags=["Acquisitions"])
 api_router.include_router(study_areas.router, prefix="/study-areas", tags=["Study Areas"])

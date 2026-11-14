@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Compass,
   Layers,
@@ -15,6 +15,8 @@ import {
   Bell,
   User,
   Radio,
+  Waves,
+  Wind,
 } from "lucide-react";
 
 export type GlobalNavigationDestination =
@@ -38,6 +40,21 @@ export const GlobalTopNav: React.FC<GlobalTopNavProps> = ({
   activeDestination,
   onNavigate,
 }) => {
+  const [marineTelemetry, setMarineTelemetry] = useState<{
+    wave_height_m: number;
+    wind_speed_kmh: number;
+    sea_roughness_state: string;
+  } | null>(null);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/v1/marine/current")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data) setMarineTelemetry(data);
+      })
+      .catch(() => {});
+  }, []);
+
   const destinations: Array<{
     id: GlobalNavigationDestination;
     label: string;
@@ -99,8 +116,26 @@ export const GlobalTopNav: React.FC<GlobalTopNavProps> = ({
         })}
       </div>
 
-      {/* 3. Right Icons */}
+      {/* 3. Right Icons & Live Marine Telemetry */}
       <div className="flex items-center gap-2.5">
+        {marineTelemetry && (
+          <div
+            title={`Live Oceanographic Telemetry: ${marineTelemetry.sea_roughness_state}`}
+            className="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#081222] border border-[#14233c] text-[10px] font-mono text-slate-300"
+          >
+            <span className="flex items-center gap-1 text-[#00e5ff]">
+              <Waves className="w-3.5 h-3.5" />
+              <span>{marineTelemetry.wave_height_m}m</span>
+            </span>
+            <span className="text-slate-600">|</span>
+            <span className="flex items-center gap-1 text-[#ff8c2b]">
+              <Wind className="w-3.5 h-3.5" />
+              <span>{marineTelemetry.wind_speed_kmh} km/h</span>
+            </span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          </div>
+        )}
+
         <button
           onClick={() => onNavigate("catalogue")}
           title="Satellite Data Discovery"
