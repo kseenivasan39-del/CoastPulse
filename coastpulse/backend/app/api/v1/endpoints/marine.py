@@ -68,7 +68,6 @@ async def get_current_marine_telemetry(lat: float = 10.767, lon: float = 79.843)
     wind_spd = float(weather_data.get("wind_speed_10m") or round(12.0 + 8.0 * abs(math.sin(lat + lon)), 1))
 
     # --- Live Astronomical Tide Calculation (Phase-shifted according to longitude) ---
-    import time, math
     epoch_hours = time.time() / 3600.0
     # Geographic longitude phase shift: 360 degrees = 12.42 tidal hours
     lon_phase_hours = (lon / 360.0) * 12.42
