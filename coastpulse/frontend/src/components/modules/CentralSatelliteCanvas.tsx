@@ -53,6 +53,9 @@ export const CentralSatelliteCanvas: React.FC<CentralSatelliteCanvasProps> = ({
   const [compRightId, setCompRightId] = useState<string>("nisar-hv");
   const [isDraggingSwipe, setIsDraggingSwipe] = useState<boolean>(false);
 
+  // State for 3D Perspective Pitch
+  const [is3DMode, setIs3DMode] = useState<boolean>(false);
+
   // Initialize MapLibre GL
   useEffect(() => {
     if (!mapContainer.current || mapRef.current) return;
@@ -90,6 +93,8 @@ export const CentralSatelliteCanvas: React.FC<CentralSatelliteCanvasProps> = ({
       style: style,
       center: [79.8433, 10.7670],
       zoom: 9.8,
+      pitch: 0,
+      maxPitch: 75,
       attributionControl: false,
     });
 
@@ -339,7 +344,27 @@ export const CentralSatelliteCanvas: React.FC<CentralSatelliteCanvasProps> = ({
         <div className="h-px w-full bg-[#18263e]" />
         <button
           onClick={() => {
-            mapRef.current?.flyTo({ center: [79.8433, 10.7670], zoom: 9.8 });
+            const next3D = !is3DMode;
+            setIs3DMode(next3D);
+            mapRef.current?.easeTo({
+              pitch: next3D ? 60 : 0,
+              bearing: next3D ? -25 : 0,
+              duration: 1200,
+            });
+          }}
+          className={`p-2 rounded-lg transition-all ${
+            is3DMode
+              ? "bg-[#ff8c2b] text-white shadow-lg shadow-[#ff8c2b]/30"
+              : "text-slate-300 hover:text-white hover:bg-[#101b2f]"
+          }`}
+          title="Toggle 3D Perspective Oblique View (60° Pitch)"
+        >
+          <span className="font-mono text-xs font-black">3D</span>
+        </button>
+        <button
+          onClick={() => {
+            mapRef.current?.flyTo({ center: [79.8433, 10.7670], zoom: 9.8, pitch: 0, bearing: 0 });
+            setIs3DMode(false);
           }}
           className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-[#101b2f] transition-colors"
         >
