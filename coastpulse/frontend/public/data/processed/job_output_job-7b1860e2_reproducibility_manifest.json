@@ -1,0 +1,30 @@
+{
+  "manifest_id": "REP-NISAR-F99A4348",
+  "generated_utc": "2026-11-13T21:26:08.267632+00:00",
+  "sensor": "NISAR_L_SAR",
+  "radiometric_quantity": "gamma0",
+  "units": "decibel (dB) / terrain-flattened gamma0",
+  "source_file": "nisar_gcov_20261030_authoritative_float32.tif",
+  "output_file": "job_output_job-7b1860e2.tif",
+  "output_sha256": "8e86aa82132ea6d860f22087f61281200ccefc0677955065648099ff99d97d60",
+  "tile_size": 256,
+  "speckle_filter": {
+    "algorithm": "Refined Lee Filter",
+    "target_enl": 4.8,
+    "window_size": 7
+  },
+  "quality_control": {
+    "total_pixels": 250240,
+    "valid_pixels": 250240,
+    "masked_nodata_pixels": 0,
+    "mean_hh_db": -19.0992,
+    "std_hh_db": 8.4635,
+    "mean_hv_db": -21.0089,
+    "std_hv_db": 7.9329
+  },
+  "software_versions": {
+    "rasterio": "1.5.2",
+    "numpy": "2.1.1",
+    "python": "3.12.6"
+  }
+}

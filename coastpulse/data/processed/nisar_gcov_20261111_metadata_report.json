@@ -1,0 +1,40 @@
+{
+  "source_granule_id": "NISAR_L2_PR_GCOV_035_084_A_007_4005_DHDH_A_20261111T001554_20261111T001628_P05036_N_F_J_001",
+  "acquisition_date": "20261111",
+  "hdf5_measurement_path_hh": "/science/LSAR/GCOV/grids/frequencyA/HHHH",
+  "hdf5_measurement_path_hv": "/science/LSAR/GCOV/grids/frequencyA/HVHV",
+  "datatype": "Float32",
+  "coordinate_reference_system": "EPSG:4326",
+  "pixel_spacing_deg": [
+    0.0015632221007612745,
+    0.0015350854348607085
+  ],
+  "spatial_bounds_wgs84": [
+    79.599096082291,
+    10.2000163555909,
+    80.0993271545346,
+    11.400453165651975
+  ],
+  "total_pixels": 250240,
+  "valid_pixels": 250240,
+  "linear_power_stats": {
+    "hh_mean": 0.09727753698825836,
+    "hh_std": 0.2111288607120514,
+    "hh_median": 0.003981071058660746,
+    "hh_min": 0.0010274596279487014,
+    "hh_max": 1.0,
+    "hv_mean": 0.06310495734214783,
+    "hv_std": 0.16062958538532257,
+    "hv_median": 0.00251188687980175
+  },
+  "decibel_gamma0_stats": {
+    "hh_mean_db": -18.746606826782227,
+    "hh_std_db": 8.549028396606445,
+    "hh_median_db": -24.0,
+    "hh_min_db": -29.882352828979492,
+    "hh_max_db": 0.0,
+    "hv_mean_db": -20.71188735961914,
+    "hv_std_db": 8.035311698913574,
+    "hv_median_db": -26.0
+  }
+}

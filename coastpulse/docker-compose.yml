@@ -1,0 +1,96 @@
+services:
+  # ----------------------------------------------------------------------------
+  # PostgreSQL with PostGIS extension for spatial granule cataloging
+  # ----------------------------------------------------------------------------
+  db:
+    image: postgis/postgis:16-3.4-alpine
+    container_name: coastpulse-postgis
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-coastpulse_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-coastpulse_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-coastpulse_db}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-coastpulse_user} -d ${POSTGRES_DB:-coastpulse_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - coastpulse-network
+
+  # ----------------------------------------------------------------------------
+  # Redis cache and asynchronous task message broker
+  # ----------------------------------------------------------------------------
+  redis:
+    image: redis:7.2-alpine
+    container_name: coastpulse-redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - coastpulse-network
+
+  # ----------------------------------------------------------------------------
+  # Backend API & Scientific Orchestrator (FastAPI)
+  # ----------------------------------------------------------------------------
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    container_name: coastpulse-backend
+    environment:
+      - ENVIRONMENT=development
+      - DEBUG=True
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-coastpulse_user}:${POSTGRES_PASSWORD:-coastpulse_secret}@db:5432/${POSTGRES_DB:-coastpulse_db}
+      - REDIS_URL=redis://redis:6379/0
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      - ./backend:/app/backend
+      - ./scientific-engine:/app/scientific-engine
+      - ./data:/app/data
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - coastpulse-network
+
+  # ----------------------------------------------------------------------------
+  # Frontend Interactive Web Application (Next.js 16 / React 19)
+  # ----------------------------------------------------------------------------
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    container_name: coastpulse-frontend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - coastpulse-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  coastpulse-network:
+    driver: bridge

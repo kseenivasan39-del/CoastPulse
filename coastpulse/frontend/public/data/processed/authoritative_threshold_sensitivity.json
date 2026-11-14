@@ -1,0 +1,74 @@
+[
+  {
+    "threshold_db": 1.0,
+    "increase_pixels": 51681,
+    "increase_pct": 20.65,
+    "increase_km2": 1498.51,
+    "decrease_pixels": 18396,
+    "decrease_pct": 7.35,
+    "decrease_km2": 533.4,
+    "stable_pixels": 180163,
+    "stable_pct": 72.0,
+    "stable_km2": 5223.88
+  },
+  {
+    "threshold_db": 1.5,
+    "increase_pixels": 29851,
+    "increase_pct": 11.93,
+    "increase_km2": 865.54,
+    "decrease_pixels": 10048,
+    "decrease_pct": 4.02,
+    "decrease_km2": 291.34,
+    "stable_pixels": 210341,
+    "stable_pct": 84.06,
+    "stable_km2": 6098.9
+  },
+  {
+    "threshold_db": 2.0,
+    "increase_pixels": 16994,
+    "increase_pct": 6.79,
+    "increase_km2": 492.75,
+    "decrease_pixels": 5798,
+    "decrease_pct": 2.32,
+    "decrease_km2": 168.11,
+    "stable_pixels": 227448,
+    "stable_pct": 90.89,
+    "stable_km2": 6594.92
+  },
+  {
+    "threshold_db": 2.5,
+    "increase_pixels": 11304,
+    "increase_pct": 4.52,
+    "increase_km2": 327.76,
+    "decrease_pixels": 3861,
+    "decrease_pct": 1.54,
+    "decrease_km2": 111.95,
+    "stable_pixels": 235075,
+    "stable_pct": 93.94,
+    "stable_km2": 6816.07
+  },
+  {
+    "threshold_db": 3.0,
+    "increase_pixels": 7868,
+    "increase_pct": 3.14,
+    "increase_km2": 228.13,
+    "decrease_pixels": 2333,
+    "decrease_pct": 0.93,
+    "decrease_km2": 67.65,
+    "stable_pixels": 240039,
+    "stable_pct": 95.92,
+    "stable_km2": 6960.0
+  },
+  {
+    "threshold_db": 4.0,
+    "increase_pixels": 3443,
+    "increase_pct": 1.38,
+    "increase_km2": 99.83,
+    "decrease_pixels": 618,
+    "decrease_pct": 0.25,
+    "decrease_km2": 17.92,
+    "stable_pixels": 246179,
+    "stable_pct": 98.38,
+    "stable_km2": 7138.03
+  }
+]

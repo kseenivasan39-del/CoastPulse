@@ -1,0 +1,113 @@
+{
+  "manifest_id": "REP-DIFF-3A676665",
+  "generated_utc": "2026-11-14T07:53:47.772814+00:00",
+  "reference_granule": "nisar_gcov_20261030_authoritative_float32.tif",
+  "secondary_granule": "nisar_gcov_20261111_authoritative_float32.tif",
+  "output_cog": "test_run.tif",
+  "output_sha256": "f76936dedc82ff3df547eaa010cf7a5f3538fab2ccee273048f6fb5533103755",
+  "alignment": {
+    "crs": "EPSG:4326",
+    "width": 320,
+    "height": 782,
+    "pixel_spacing": [
+      0.0015632221007612745,
+      0.0015350854348607085
+    ],
+    "pixel_area_m2": 29048.96,
+    "pixel_area_ha": 2.904896,
+    "bounds": [
+      79.599096082291,
+      10.2000163555909,
+      80.0993271545346,
+      11.400453165651975
+    ]
+  },
+  "statistics": {
+    "total_pixels": 250240,
+    "valid_pixels": 250240,
+    "excluded_nodata_pixels": 0,
+    "mean_delta_db": 0.0081,
+    "std_delta_db": 0.0443,
+    "median_delta_db": 0.0002,
+    "min_delta_db": -0.7488,
+    "max_delta_db": 0.8791,
+    "primary_threshold_db": 3.0,
+    "classes": {
+      "stable": {
+        "pixels": 250240,
+        "pct": 100.0,
+        "area_ha": 726921.2,
+        "meaning": "Backscatter shift within \u00b13.0 dB; unperturbed surface baseline."
+      },
+      "increase": {
+        "pixels": 0,
+        "pct": 0.0,
+        "area_ha": 0.0,
+        "meaning": "Backscatter increase > +3.0 dB; roughness increase, emergent vegetation or soil moisture rise."
+      },
+      "decrease": {
+        "pixels": 0,
+        "pct": 0.0,
+        "area_ha": 0.0,
+        "meaning": "Backscatter drop < -3.0 dB; smooth open water expansion, specular reflection or canopy clearing."
+      },
+      "invalid": {
+        "pixels": 0,
+        "pct": 0.0,
+        "area_ha": 0.0,
+        "meaning": "NoData, shadow, layover, or masked radar measurement."
+      }
+    },
+    "threshold_sensitivity": {
+      "1.5_dB": {
+        "increase_pct": 0.0,
+        "decrease_pct": 0.0,
+        "stable_pct": 100.0,
+        "increase_ha": 0.0,
+        "decrease_ha": 0.0
+      },
+      "2.0_dB": {
+        "increase_pct": 0.0,
+        "decrease_pct": 0.0,
+        "stable_pct": 100.0,
+        "increase_ha": 0.0,
+        "decrease_ha": 0.0
+      },
+      "2.5_dB": {
+        "increase_pct": 0.0,
+        "decrease_pct": 0.0,
+        "stable_pct": 100.0,
+        "increase_ha": 0.0,
+        "decrease_ha": 0.0
+      },
+      "3.0_dB": {
+        "increase_pct": 0.0,
+        "decrease_pct": 0.0,
+        "stable_pct": 100.0,
+        "increase_ha": 0.0,
+        "decrease_ha": 0.0
+      },
+      "3.5_dB": {
+        "increase_pct": 0.0,
+        "decrease_pct": 0.0,
+        "stable_pct": 100.0,
+        "increase_ha": 0.0,
+        "decrease_ha": 0.0
+      },
+      "4.0_dB": {
+        "increase_pct": 0.0,
+        "decrease_pct": 0.0,
+        "stable_pct": 100.0,
+        "increase_ha": 0.0,
+        "decrease_ha": 0.0
+      }
+    },
+    "scientific_disclaimer": "Radar backscatter changes reflect physical electromagnetic scattering differences. They must NOT be interpreted as confirmed flooding, erosion, or ecological loss without collateral ground validation."
+  },
+  "legend": {
+    "0": "Invalid / Masked NoData",
+    "1": "Stable Baseline (\u0394\u03b3\u2070 within \u00b13.0 dB)",
+    "2": "Significant Increase (\u0394\u03b3\u2070 > +3.0 dB)",
+    "3": "Significant Decrease (\u0394\u03b3\u2070 < -3.0 dB)"
+  }
+}
