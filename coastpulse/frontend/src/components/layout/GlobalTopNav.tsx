@@ -67,15 +67,15 @@ export const GlobalTopNav: React.FC<GlobalTopNavProps> = ({
     const lon = liveCoords ? liveCoords[0] : activeLocation ? activeLocation.coordinates[0] : 79.843;
     const lat = liveCoords ? liveCoords[1] : activeLocation ? activeLocation.coordinates[1] : 10.767;
 
-    // Throttle / debounce network queries to prevent spamming while panning
+    // Fast 120ms debounce for near-instant response on pan release
     const timer = setTimeout(() => {
-      fetch(`http://127.0.0.1:8000/api/v1/marine/current?lat=${lat.toFixed(3)}&lon=${lon.toFixed(3)}`)
+      fetch(`http://127.0.0.1:8000/api/v1/marine/current?lat=${lat.toFixed(2)}&lon=${lon.toFixed(2)}`)
         .then((res) => (res.ok ? res.json() : null))
         .then((data) => {
           if (data) setMarineTelemetry(data);
         })
         .catch(() => {});
-    }, 400);
+    }, 120);
 
     return () => clearTimeout(timer);
   }, [liveCoords, activeLocation]);
