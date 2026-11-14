@@ -99,7 +99,7 @@ export const DedicatedComparisonWorkspace: React.FC<DedicatedComparisonWorkspace
 
       {/* Main Draggable Swipe Canvas */}
       <div ref={containerRef} className="relative flex-1 bg-[#03060c] overflow-hidden cursor-ew-resize">
-        {/* Left Side: T1 Reference Observation (NASA Blue Theme) */}
+        {/* Left Side: T1 Reference Observation */}
         <div className="absolute inset-0 bg-[#050d1e] flex items-center justify-center p-8 pointer-events-none">
           <div className="relative w-full max-w-4xl h-full max-h-[82vh] border border-[#00e5ff]/40 rounded-xl overflow-hidden bg-slate-950 flex flex-col items-center justify-center shadow-2xl">
             <div className="absolute top-4 left-4 z-20 px-3.5 py-2 rounded-lg bg-black/85 border border-[#00e5ff] font-mono text-xs text-[#00e5ff] shadow-2xl">
@@ -107,15 +107,15 @@ export const DedicatedComparisonWorkspace: React.FC<DedicatedComparisonWorkspace
               <div className="text-[10px] text-slate-400 mt-0.5">Cycle 34 Baseline [γ⁰ HH]</div>
             </div>
 
-            <div className="text-slate-400 font-mono text-center p-6 space-y-2">
-              <div className="text-[#00e5ff] font-extrabold text-base">NISAR L2 GCOV (October 30, 2026)</div>
-              <div className="text-sm text-slate-300">Mean Backscatter: -12.38 dB • Incidence Angle: 37.2° • Valid Pixels: 250,240</div>
-              <div className="text-xs text-slate-500">Native 170.9m grid • Lambertian terrain-flattened</div>
+            <div className="absolute bottom-6 left-6 z-20 text-slate-300 font-mono text-left bg-slate-950/80 p-3 rounded-lg border border-slate-800 backdrop-blur">
+              <div className="text-[#00e5ff] font-bold text-sm">NISAR L2 GCOV (Oct 30, 2026)</div>
+              <div className="text-xs text-slate-400 mt-1">Mean Backscatter: -12.38 dB • Incidence: 37.2°</div>
+              <div className="text-[10px] text-slate-500">Native 170.9m grid • Terrain-flattened</div>
             </div>
           </div>
         </div>
 
-        {/* Right Side: T2 Secondary Observation (ISRO Saffron Theme) */}
+        {/* Right Side: T2 Secondary Observation */}
         <div
           className="absolute inset-0 bg-[#160c03] flex items-center justify-center p-8 pointer-events-none overflow-hidden transition-none"
           style={{ clipPath: `inset(0 0 0 ${sliderPos}%)` }}
@@ -138,10 +138,10 @@ export const DedicatedComparisonWorkspace: React.FC<DedicatedComparisonWorkspace
               />
             )}
 
-            <div className="text-slate-300 font-mono text-center p-6 space-y-2">
-              <div className="text-[#ff9933] font-extrabold text-base">NISAR L2 GCOV (November 11, 2026)</div>
-              <div className="text-sm">Mean Backscatter: -12.03 dB • Net Delta: +0.35 dB • Water Shift: +1,420 ha</div>
-              <div className="text-xs text-slate-400">Refined Lee 7x7 speckle-filtered</div>
+            <div className="absolute bottom-6 right-6 z-20 text-slate-300 font-mono text-right bg-slate-950/80 p-3 rounded-lg border border-slate-800 backdrop-blur">
+              <div className="text-[#ff9933] font-bold text-sm">NISAR L2 GCOV (Nov 11, 2026)</div>
+              <div className="text-xs text-slate-400 mt-1">Mean: -12.03 dB • Net Delta: +0.35 dB</div>
+              <div className="text-[10px] text-slate-500">Water Shift: +1,420 ha • Lee Filtered</div>
             </div>
           </div>
         </div>

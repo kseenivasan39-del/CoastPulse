@@ -294,8 +294,8 @@ export const LeftDataDrawer: React.FC<LeftDataDrawerProps> = ({
 
         <div className="flex-1" />
 
-        <div className="text-[10px] font-mono text-[#00e5ff] font-bold rotate-90 whitespace-nowrap">
-          {activeLayersCount} ACTIVE
+        <div className="text-[10px] font-mono text-cyan-400 font-semibold rotate-90 whitespace-nowrap mb-4">
+          {activeLayersCount} LAYERS
         </div>
       </div>
     );

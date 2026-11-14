@@ -17,6 +17,7 @@ import { DedicatedComparisonWorkspace } from "@/components/modules/DedicatedComp
 import { SARAnalysisWorkspaceView } from "@/components/modules/SARAnalysisWorkspaceView";
 import { AIResearchAssistantView } from "@/components/modules/AIResearchAssistantView";
 import { DashboardView } from "@/components/modules/DashboardView";
+import { SettingsView } from "@/components/modules/SettingsView";
 import { GLOBAL_COASTAL_OBSERVATORIES, CoastalLocation } from "@/lib/geoUtils";
 
 export default function Home() {
@@ -155,6 +156,13 @@ export default function Home() {
 
           {/* Primary View 9: Automated Satellite Monitor */}
           {activeDestination === "monitor" && <SatelliteUpdateMonitorView />}
+
+          {/* Primary View 10: Settings */}
+          {activeDestination === "settings" && (
+            <div className="flex-1 overflow-y-auto p-6 bg-[#040812]">
+              <SettingsView />
+            </div>
+          )}
         </div>
 
         {/* Right Intelligence Suite Panel (Shown during Explore mode) */}
@@ -166,32 +174,27 @@ export default function Home() {
       {/* 3. Bottom Observation Timeline (Shown during Explore mode) */}
       {activeDestination === "explore" && <UnifiedObservationTimeline />}
 
-      {/* 4. Global Scientific Status Footer Bar */}
-      <footer className="relative h-7 bg-[#02050b] border-t border-[#101826] px-5 flex items-center justify-between text-[11px] text-slate-400 font-mono select-none z-30 overflow-hidden">
-        <div className="relative z-10 flex items-center gap-4">
+      {/* 4. Scientific Status Footer Bar */}
+      <footer className="relative h-6 bg-[#060b16] border-t border-[#121c2e] px-4 flex items-center justify-between text-[11px] text-slate-400 font-mono select-none z-30">
+        <div className="flex items-center gap-4">
           <div className="flex items-center gap-1.5 text-slate-300">
-            <span className="w-2 h-2 rounded-full bg-[#10b981]" />
-            <span>Platform: CoastPulse</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            <span className="font-sans font-medium text-slate-200">CoastPulse</span>
           </div>
           <span className="text-slate-600">|</span>
           <div className="text-slate-300 truncate max-w-xs">
-            AOI: {selectedLocation ? selectedLocation.name : "Global Planetary View"}
+            AOI: {selectedLocation ? selectedLocation.name : "Global Overview"}
           </div>
           <span className="text-slate-600">|</span>
           <div className="text-slate-300">
-            Observatories: <span className="text-[#00e5ff] font-semibold">{GLOBAL_COASTAL_OBSERVATORIES.length} Verified</span>
+            Observatories: <span className="text-cyan-400 font-medium">{GLOBAL_COASTAL_OBSERVATORIES.length} Active</span>
           </div>
         </div>
 
-        <div className="relative z-10 flex items-center gap-4">
-          <div className="flex items-center gap-1.5 text-[#34d399] font-medium">
-            <span>🛡</span>
-            <span>Zero Extrapolation Guarantee</span>
-          </div>
+        <div className="flex items-center gap-4 text-[10px] text-slate-400">
+          <div>CRS: EPSG:4326 (WGS 84)</div>
           <span className="text-slate-600">|</span>
-          <div className="text-slate-400">
-            EPSG:4326 Native Geodesic Engine
-          </div>
+          <div>NISAR L-band & S-band Ready</div>
         </div>
       </footer>
     </div>

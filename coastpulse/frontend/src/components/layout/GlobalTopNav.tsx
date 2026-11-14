@@ -26,7 +26,8 @@ export type GlobalNavigationDestination =
   | "research"
   | "catalogue"
   | "studies"
-  | "reports";
+  | "reports"
+  | "settings";
 
 interface GlobalTopNavProps {
   activeDestination: GlobalNavigationDestination;

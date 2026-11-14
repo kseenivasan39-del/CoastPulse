@@ -332,73 +332,72 @@ export const GlobalObservatoryMap: React.FC<GlobalObservatoryMapProps> = ({
       {/* MapLibre GL Canvas */}
       <div ref={mapContainer} className="absolute inset-0 w-full h-full" />
 
-      {/* 1. Global View Header Overlay */}
-      <div className="absolute top-4 left-4 z-10 flex items-center gap-3">
-        <div className="px-3.5 py-2 rounded-xl bg-[#060c18]/90 backdrop-blur-md border border-[#14233c] shadow-2xl flex items-center gap-3 text-xs">
-          <Globe className="w-4 h-4 text-[#00e5ff] animate-spin-slow" />
-          <div className="flex flex-col">
-            <span className="font-extrabold text-white text-xs">COASTPULSE GLOBAL EXPLORER</span>
-            <span className="text-[10px] text-slate-400 font-mono">
-              {GLOBAL_COASTAL_OBSERVATORIES.length} Verified Coastal Observatories Active
+      {/* 1. Global View Header Overlay: Compact unified bar */}
+      <div className="absolute top-3 left-3 right-16 z-10 flex items-center justify-between gap-3 pointer-events-none">
+        {/* Left: Location Search & Status Pill */}
+        <div className="flex items-center gap-2 pointer-events-auto">
+          <div className="px-2.5 py-1.5 rounded-lg bg-[#0a1122]/90 backdrop-blur border border-[#1e293b] shadow-md flex items-center gap-2 text-xs">
+            <Globe className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+            <span className="font-semibold text-white text-xs whitespace-nowrap">Global Explorer</span>
+            <span className="text-[10px] text-slate-400 font-mono hidden md:inline">
+              ({GLOBAL_COASTAL_OBSERVATORIES.length})
             </span>
           </div>
-        </div>
 
-        {/* Global Location Quick Switcher */}
-        <div className="relative">
-          <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#060c18]/90 backdrop-blur-md border border-[#14233c] shadow-xl text-xs text-slate-200">
-            <Search className="w-3.5 h-3.5 text-slate-400" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Filter delta, wetland, country..."
-              className="bg-transparent border-none text-xs text-white placeholder-slate-500 focus:outline-none w-48 font-mono"
-            />
-          </div>
-
-          {searchQuery && (
-            <div className="absolute top-full left-0 mt-1 w-72 bg-[#060c18] border border-[#14233c] rounded-xl shadow-2xl overflow-hidden z-30 max-h-60 overflow-y-auto">
-              {filteredObservatories.map((loc) => (
-                <button
-                  key={loc.name}
-                  onClick={() => {
-                    onSelectLocation(loc);
-                    setSearchQuery("");
-                  }}
-                  className="w-full text-left p-2.5 hover:bg-[#0c182c] border-b border-[#101b2f] flex flex-col transition-colors"
-                >
-                  <span className="font-bold text-xs text-white">{loc.name}</span>
-                  <span className="text-[10px] text-slate-400 font-mono">
-                    {loc.country} · {loc.category}
-                  </span>
-                </button>
-              ))}
+          {/* Quick Location Filter Dropdown */}
+          <div className="relative">
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#0a1122]/90 backdrop-blur border border-[#1e293b] shadow-md text-xs text-slate-200">
+              <Search className="w-3 h-3 text-slate-400 shrink-0" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Find delta..."
+                className="bg-transparent border-none text-xs text-white placeholder-slate-500 focus:outline-none w-28 md:w-36 font-sans"
+              />
             </div>
-          )}
-        </div>
-      </div>
 
-      {/* 2. Top-Right Real-Time Basemap Switcher */}
-      <div className="absolute top-4 right-16 z-20">
-        <div className="relative">
+            {searchQuery && (
+              <div className="absolute top-full left-0 mt-1 w-64 bg-[#0a1122] border border-[#1e293b] rounded-lg shadow-xl overflow-hidden z-30 max-h-60 overflow-y-auto">
+                {filteredObservatories.map((loc) => (
+                  <button
+                    key={loc.name}
+                    onClick={() => {
+                      onSelectLocation(loc);
+                      setSearchQuery("");
+                    }}
+                    className="w-full text-left p-2 hover:bg-[#131f38] border-b border-[#142036] flex flex-col transition-colors"
+                  >
+                    <span className="font-medium text-xs text-white">{loc.name}</span>
+                    <span className="text-[10px] text-slate-400">
+                      {loc.country} · {loc.category}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Right: Basemap Selector */}
+        <div className="relative pointer-events-auto">
           <button
             onClick={() => setShowBasemapDropdown(!showBasemapDropdown)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#060c18]/90 backdrop-blur-md border border-[#14233c] hover:border-[#00e5ff]/50 shadow-xl text-xs text-slate-200 transition-all"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#0a1122]/90 backdrop-blur border border-[#1e293b] hover:border-slate-600 shadow-md text-xs text-slate-200 transition-colors whitespace-nowrap"
           >
-            <Radio className="w-3.5 h-3.5 text-[#00e5ff] animate-pulse" />
-            <span className="font-semibold">
-              {basemapMode === "highres" && "High-Res Basemap (Esri/Maxar)"}
-              {basemapMode === "nasa-gibs-live" && "Live NASA GIBS (Today's Feed)"}
-              {basemapMode === "nasa-night-lights" && "VIIRS Night Lights (NASA)"}
+            <Radio className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+            <span className="font-medium text-[11px] hidden sm:inline">
+              {basemapMode === "highres" && "True-Color"}
+              {basemapMode === "nasa-gibs-live" && "NASA GIBS"}
+              {basemapMode === "nasa-night-lights" && "Night Lights"}
             </span>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+            <ChevronDown className="w-3 h-3 text-slate-400 shrink-0" />
           </button>
 
           {showBasemapDropdown && (
-            <div className="absolute right-0 top-full mt-1.5 w-72 bg-[#060c18] border border-[#14233c] rounded-xl shadow-2xl p-2 z-30 space-y-1 backdrop-blur-md">
+            <div className="absolute right-0 top-full mt-1.5 w-64 bg-[#0a1122] border border-[#1e293b] rounded-lg shadow-2xl p-2 z-30 space-y-1 backdrop-blur-md">
               <div className="text-[10px] font-mono text-slate-400 px-2 py-1 uppercase tracking-wider">
-                Select Planetary View Source
+                Basemap Layer
               </div>
 
               {/* Option 1: High-Res Basemap */}
@@ -408,14 +407,14 @@ export const GlobalObservatoryMap: React.FC<GlobalObservatoryMapProps> = ({
                   setShowBasemapDropdown(false);
                 }}
                 className={`w-full text-left p-2 rounded-lg flex flex-col transition-colors ${
-                  basemapMode === "highres" ? "bg-[#0f1d38] border border-[#00e5ff]/40 text-[#00e5ff]" : "text-slate-300 hover:bg-[#0c182c]"
+                  basemapMode === "highres" ? "bg-[#0f1d38] border border-cyan-500/40 text-cyan-400" : "text-slate-300 hover:bg-[#131f38]"
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-xs">High-Res Basemap</span>
+                  <span className="font-semibold text-xs">High-Res Satellite</span>
                   <span className="text-[10px] font-mono text-slate-400">Maxar / Esri</span>
                 </div>
-                <span className="text-[10px] text-slate-400 mt-0.5">Sub-meter optical clarity for coastal features</span>
+                <span className="text-[10px] text-slate-400 mt-0.5">Sub-meter optical clarity</span>
               </button>
 
               {/* Option 2: Live NASA GIBS */}
@@ -425,17 +424,17 @@ export const GlobalObservatoryMap: React.FC<GlobalObservatoryMapProps> = ({
                   setShowBasemapDropdown(false);
                 }}
                 className={`w-full text-left p-2 rounded-lg flex flex-col transition-colors ${
-                  basemapMode === "nasa-gibs-live" ? "bg-[#181109] border border-[#ff8c2b] text-[#ff8c2b]" : "text-slate-300 hover:bg-[#0c182c]"
+                  basemapMode === "nasa-gibs-live" ? "bg-[#181109] border border-[#ff8c2b] text-[#ff8c2b]" : "text-slate-300 hover:bg-[#131f38]"
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-xs flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#ff8c2b] animate-ping" />
-                    NASA GIBS Live Daily
+                  <span className="font-semibold text-xs flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#ff8c2b]" />
+                    NASA GIBS Daily
                   </span>
                   <span className="text-[10px] font-mono text-[#ff8c2b]">Real-Time</span>
                 </div>
-                <span className="text-[10px] text-slate-400 mt-0.5">Updated within 3–4 hours of orbital overflight</span>
+                <span className="text-[10px] text-slate-400 mt-0.5">Reflected optical mosaic</span>
               </button>
 
               {/* Option 3: NASA VIIRS Night Lights */}
@@ -445,70 +444,18 @@ export const GlobalObservatoryMap: React.FC<GlobalObservatoryMapProps> = ({
                   setShowBasemapDropdown(false);
                 }}
                 className={`w-full text-left p-2 rounded-lg flex flex-col transition-colors ${
-                  basemapMode === "nasa-night-lights" ? "bg-[#0f1d38] border border-[#00e5ff]/40 text-[#00e5ff]" : "text-slate-300 hover:bg-[#0c182c]"
+                  basemapMode === "nasa-night-lights" ? "bg-[#0f1d38] border border-cyan-500/40 text-cyan-400" : "text-slate-300 hover:bg-[#131f38]"
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-xs">VIIRS Night Lights</span>
-                  <span className="text-[10px] font-mono text-slate-400">NASA EarthData</span>
+                  <span className="font-semibold text-xs">VIIRS Night Lights</span>
+                  <span className="text-[10px] font-mono text-slate-400">NASA VIIRS</span>
                 </div>
-                <span className="text-[10px] text-slate-400 mt-0.5">Coastal urban illumination & marine vessel lights</span>
+                <span className="text-[10px] text-slate-400 mt-0.5">Urban illumination</span>
               </button>
             </div>
           )}
         </div>
-      </div>
-
-      {/* 3. Left GIS Drawing Toolbar */}
-      <div className="absolute top-20 left-4 z-10 flex flex-col gap-1 p-1 rounded-xl bg-[#060c18]/90 backdrop-blur-md border border-[#14233c] shadow-xl">
-        <button
-          onClick={() => mapRef.current?.flyTo({ center: [20, 15], zoom: 2.2 })}
-          title="World View"
-          className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-[#101b2f] transition-colors"
-        >
-          <Globe className="w-4 h-4 text-[#00e5ff]" />
-        </button>
-        <button
-          onClick={() => {
-            const loc = GLOBAL_COASTAL_OBSERVATORIES[1]; // Florida Everglades
-            onSelectLocation(loc);
-          }}
-          title="Go to Florida Everglades"
-          className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-[#101b2f] transition-colors"
-        >
-          <div className="text-[9px] font-black text-[#ff8c2b]">USA</div>
-        </button>
-        <button
-          onClick={() => {
-            const loc = GLOBAL_COASTAL_OBSERVATORIES[2]; // Mekong Delta
-            onSelectLocation(loc);
-          }}
-          title="Go to Mekong Delta, Vietnam"
-          className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-[#101b2f] transition-colors"
-        >
-          <div className="text-[9px] font-black text-[#ff8c2b]">VNM</div>
-        </button>
-        <button
-          onClick={() => {
-            const loc = GLOBAL_COASTAL_OBSERVATORIES[3]; // Wadden Sea
-            onSelectLocation(loc);
-          }}
-          title="Go to Wadden Sea, Netherlands / Germany"
-          className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-[#101b2f] transition-colors"
-        >
-          <div className="text-[9px] font-black text-[#ff8c2b]">EUR</div>
-        </button>
-        <div className="h-px w-full bg-[#18263e]" />
-        <button
-          onClick={() => {
-            const loc = GLOBAL_COASTAL_OBSERVATORIES[8]; // Nagapattinam
-            onSelectLocation(loc);
-          }}
-          title="Demonstration Study: Nagapattinam"
-          className="p-2 rounded-lg text-slate-400 hover:text-cyan-400 hover:bg-[#101b2f] transition-colors"
-        >
-          <div className="text-[9px] font-mono font-bold text-cyan-400">DEMO</div>
-        </button>
       </div>
 
       {/* 4. Right Map Navigation Stack */}

@@ -33,7 +33,7 @@ export const AIResearchAssistantView: React.FC = () => {
     {
       id: "msg-welcome",
       sender: "assistant",
-      text: "Hello! I am COASTPULSE-AI, your scientific radar remote sensing assistant. I interpret genuine NASA-ISRO NISAR L-band and S-band observations over Nagapattinam District, Tamil Nadu. I am programmatically restricted to verified physical backscatter calculations and will never invent observations or draw unsupported ecological conclusions.",
+      text: "SAR Analysis Assistant ready. Grounded in radiometric backscatter datasets and polarimetric decomposition for Nagapattinam District. You can query incidence angle normalization, surface water thresholds, and bitemporal backscatter differentials.",
       timestamp: "10:00 AM",
       citations: [
         {
