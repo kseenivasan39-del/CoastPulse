@@ -49,6 +49,7 @@ export default function Home() {
       <GlobalTopNav
         activeDestination={activeDestination}
         onNavigate={(dest) => setActiveDestination(dest)}
+        activeLocation={selectedLocation}
       />
 
       {/* 2. Middle Main Workspace Body */}

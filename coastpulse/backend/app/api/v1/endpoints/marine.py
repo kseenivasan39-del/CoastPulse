@@ -41,12 +41,15 @@ async def get_current_marine_telemetry(lat: float = 10.767, lon: float = 79.843)
     wave_t = float(marine_data.get("wave_period", 4.8))
     wind_spd = float(weather_data.get("wind_speed_10m", 15.5))
 
-    # --- Live Astronomical Tide Calculation (Semi-Diurnal M2 Phase Model for Coromandel Coast) ---
+    # --- Live Astronomical Tide Calculation (Phase-shifted according to longitude) ---
     import time, math
     epoch_hours = time.time() / 3600.0
-    # M2 tidal period is 12.42 hours with standard spring range ~0.85m at Nagapattinam
-    tide_height_m = round(0.48 * math.sin((2 * math.pi / 12.42) * (epoch_hours - 2.5)), 2)
-    tide_state = "Ebb Flow (Falling)" if math.cos((2 * math.pi / 12.42) * (epoch_hours - 2.5)) < 0 else "Flood Flow (Rising)"
+    # Geographic longitude phase shift: 360 degrees = 12.42 tidal hours
+    lon_phase_hours = (lon / 360.0) * 12.42
+    # Semi-diurnal amplitude varies by coastal bathymetry and latitude
+    tidal_amplitude = round(0.40 + 0.25 * math.cos(math.radians(lat)), 2)
+    tide_height_m = round(tidal_amplitude * math.sin((2 * math.pi / 12.42) * (epoch_hours + lon_phase_hours)), 2)
+    tide_state = "Ebb Flow (Falling)" if math.cos((2 * math.pi / 12.42) * (epoch_hours + lon_phase_hours)) < 0 else "Flood Flow (Rising)"
 
     # --- 3D Hydrodynamic Coastal Runup (Stockdon empirical wave runup formulation R2%) ---
     # R2% = 1.1 * (0.35 * Beta_f * sqrt(H0 * L0) + 0.5 * sqrt(H0*L0*(0.563*Beta_f^2 + 0.004)))

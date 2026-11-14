@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { CoastalLocation } from "@/lib/geoUtils";
 import {
   Compass,
   Layers,
@@ -34,16 +35,20 @@ export type GlobalNavigationDestination =
 interface GlobalTopNavProps {
   activeDestination: GlobalNavigationDestination;
   onNavigate: (destination: GlobalNavigationDestination) => void;
+  activeLocation?: CoastalLocation | null;
 }
 
 export const GlobalTopNav: React.FC<GlobalTopNavProps> = ({
   activeDestination,
   onNavigate,
+  activeLocation,
 }) => {
   const [marineTelemetry, setMarineTelemetry] = useState<{
     wave_height_m: number;
     wind_speed_kmh: number;
     sea_roughness_state: string;
+    latitude?: number;
+    longitude?: number;
     tide?: {
       current_height_m: number;
       state: string;
@@ -55,14 +60,18 @@ export const GlobalTopNav: React.FC<GlobalTopNavProps> = ({
     };
   } | null>(null);
 
+  // Re-fetch telemetry whenever the user selects or zooms to a new Coastal Observatory
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/v1/marine/current")
+    const lat = activeLocation ? activeLocation.coordinates[1] : 10.767;
+    const lon = activeLocation ? activeLocation.coordinates[0] : 79.843;
+
+    fetch(`http://127.0.0.1:8000/api/v1/marine/current?lat=${lat}&lon=${lon}`)
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data) setMarineTelemetry(data);
       })
       .catch(() => {});
-  }, []);
+  }, [activeLocation]);
 
   const destinations: Array<{
     id: GlobalNavigationDestination;
