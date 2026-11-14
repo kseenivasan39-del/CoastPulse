@@ -162,8 +162,6 @@ export class MapLayerController {
     // Raster image overlay layer
     if (def.sourceType === "raster_image" && def.coordinates) {
       if (!this.map.getSource(sourceId)) {
-        layerStore.setLayerLoading(def.id, true);
-
         try {
           this.map.addSource(sourceId, {
             type: "image",
@@ -182,10 +180,8 @@ export class MapLayerController {
           });
 
           this.addedLayers.add(def.id);
-          layerStore.setLayerLoading(def.id, false);
         } catch (err: any) {
           console.error(`Failed to add raster layer ${def.id}:`, err);
-          layerStore.setLayerError(def.id, `Failed to load raster: ${err?.message || "Source error"}`);
           return;
         }
       } else {

@@ -144,7 +144,16 @@ export const GlobalCoastalEventWatchView: React.FC = () => {
 
         {/* Scrollable Events List */}
         <div className="flex-1 overflow-y-auto p-3 space-y-2 divide-y divide-[#0c1424]">
-          {filteredEvents.map((ev) => {
+          {filteredEvents.length === 0 ? (
+            <div className="p-6 text-center space-y-2 rounded-xl bg-[#08101e] border border-[#121f36]">
+              <Radio className="w-6 h-6 text-slate-500 mx-auto" />
+              <p className="text-xs text-slate-300 font-medium">No events match filter</p>
+              <p className="text-[10px] text-slate-500">
+                Switch to ALL or run automated anomaly detection to scan satellite streams.
+              </p>
+            </div>
+          ) : (
+            filteredEvents.map((ev) => {
             const isSelected = selectedEvent?.event_id === ev.event_id;
 
             return (
@@ -175,8 +184,9 @@ export const GlobalCoastalEventWatchView: React.FC = () => {
                 </div>
               </div>
             );
-          })}
-        </div>
+          })
+        )}
+      </div>
       </div>
 
       {/* 2. Main Event Intelligence Workspace */}

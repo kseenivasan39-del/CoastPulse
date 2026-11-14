@@ -334,12 +334,16 @@ class LayerStore {
     for (const lid of preset.layerIds) {
       const def = LAYER_REGISTRY.find((l) => l.id === lid);
       if (def && def.isAvailable) {
-        this.setLayerEnabled(lid, true);
+        const current = this.states.get(lid);
+        if (current) {
+          this.states.set(lid, { ...current, enabled: true, error: null });
+        }
         applied.push(lid);
       } else {
         missing.push(lid);
       }
     }
+    this.notify();
     return { applied, missing };
   }
 
