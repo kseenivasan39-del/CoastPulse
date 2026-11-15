@@ -63,10 +63,16 @@ export const SituationReportModal: React.FC<SituationReportModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-in fade-in duration-200">
-      <div className="w-full max-w-2xl bg-[#070e1c] border border-[#162947] rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-in fade-in duration-200"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-2xl max-h-[85vh] bg-[#070e1c] border border-[#162947] rounded-2xl shadow-2xl overflow-hidden flex flex-col my-auto"
+      >
         {/* Header */}
-        <div className="p-4 border-b border-[#14233c] flex items-center justify-between bg-[#050b16]">
+        <div className="p-4 border-b border-[#14233c] flex items-center justify-between bg-[#050b16] shrink-0">
           <div className="flex items-center gap-2.5">
             <div className="p-2 rounded-xl bg-orange-500/10 border border-orange-500/30 text-[#ff8c2b]">
               <FileText className="w-5 h-5" />
@@ -85,7 +91,7 @@ export const SituationReportModal: React.FC<SituationReportModalProps> = ({
         </div>
 
         {/* Body Content */}
-        <div className="p-5 space-y-4 text-xs">
+        <div className="p-5 space-y-4 text-xs overflow-y-auto max-h-[calc(85vh-130px)]">
           {/* Metadata Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 p-3.5 rounded-xl bg-[#0c1628] border border-[#172740]">
             <div>
@@ -156,7 +162,7 @@ export const SituationReportModal: React.FC<SituationReportModalProps> = ({
         </div>
 
         {/* Footer Actions */}
-        <div className="p-4 border-t border-[#14233c] bg-[#050b16] flex items-center justify-between">
+        <div className="p-4 border-t border-[#14233c] bg-[#050b16] flex items-center justify-between shrink-0">
           <span className="text-[10px] text-slate-500 font-mono">
             Complies with ISO 19115 Geographic Information Metadata Standard
           </span>
