@@ -146,7 +146,7 @@ export const GlobalTopNav: React.FC<GlobalTopNavProps> = ({
         {marineTelemetry && (
           <div
             title={`Live 3D Hydrodynamics & Tide: Tide ${marineTelemetry.tide?.current_height_m}m (${marineTelemetry.tide?.state}), Stockdon Wave Runup: +${marineTelemetry.hydrodynamics?.stockdon_r2_runup_m}m, Total Water Level: ${marineTelemetry.hydrodynamics?.total_water_level_m}m (${marineTelemetry.hydrodynamics?.inundation_risk})`}
-            className="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#081222] border border-[#14233c] text-[10px] font-mono text-slate-300"
+            className="flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#081222] border border-[#14233c] text-[10px] font-mono text-slate-300"
           >
             <span className="flex items-center gap-1 text-[#00e5ff]">
               <Waves className="w-3.5 h-3.5" />

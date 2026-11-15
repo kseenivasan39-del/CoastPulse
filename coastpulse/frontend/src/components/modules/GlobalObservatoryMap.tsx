@@ -20,6 +20,7 @@ import {
   Calendar,
 } from "lucide-react";
 import { GLOBAL_COASTAL_OBSERVATORIES, CoastalLocation } from "@/lib/geoUtils";
+import { MapLayerController } from "@/lib/layerSystem";
 
 interface GlobalObservatoryMapProps {
   selectedLocation: CoastalLocation | null;
@@ -38,9 +39,11 @@ export const GlobalObservatoryMap: React.FC<GlobalObservatoryMapProps> = ({
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
+  const layerControllerRef = useRef<MapLayerController | null>(null);
   const [coords, setCoords] = useState<[number, number]>([0, 20]);
   const [zoomLevel, setZoomLevel] = useState<number>(2.0);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [is3DMode, setIs3DMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [basemapMode, setBasemapMode] = useState<BasemapMode>("highres");
   const [showBasemapDropdown, setShowBasemapDropdown] = useState(false);
@@ -162,6 +165,8 @@ export const GlobalObservatoryMap: React.FC<GlobalObservatoryMapProps> = ({
       style: style,
       center: selectedLocation ? selectedLocation.coordinates : [20, 15],
       zoom: selectedLocation ? 9.5 : 2.2,
+      pitch: 0,
+      maxPitch: 75,
       attributionControl: false,
     });
 
@@ -173,6 +178,12 @@ export const GlobalObservatoryMap: React.FC<GlobalObservatoryMapProps> = ({
 
     map.on("load", () => {
       setMapLoaded(true);
+
+      // Initialize map layer controller for all 15 geospatial layers
+      const controller = new MapLayerController();
+      controller.attach(map);
+      layerControllerRef.current = controller;
+      (map as any)._layerController = controller;
 
       // Add Global Observatory Sites GeoJSON
       const features = GLOBAL_COASTAL_OBSERVATORIES.map((loc) => ({
@@ -304,6 +315,9 @@ export const GlobalObservatoryMap: React.FC<GlobalObservatoryMapProps> = ({
     mapRef.current = map;
 
     return () => {
+      if ((map as any)._layerController) {
+        (map as any)._layerController.detach();
+      }
       map.remove();
       mapRef.current = null;
     };
@@ -469,6 +483,26 @@ export const GlobalObservatoryMap: React.FC<GlobalObservatoryMapProps> = ({
 
       {/* 4. Right Map Navigation Stack */}
       <div className="absolute top-20 right-4 z-10 flex flex-col gap-1 p-1 rounded-xl bg-[#060c18]/90 backdrop-blur-md border border-[#14233c] shadow-xl">
+        <button
+          onClick={() => {
+            const next3D = !is3DMode;
+            setIs3DMode(next3D);
+            mapRef.current?.easeTo({
+              pitch: next3D ? 60 : 0,
+              bearing: next3D ? -25 : 0,
+              duration: 1200,
+            });
+          }}
+          className={`p-2 rounded-lg transition-all ${
+            is3DMode
+              ? "bg-[#ff8c2b] text-white shadow-lg shadow-[#ff8c2b]/30 font-bold"
+              : "text-slate-300 hover:text-white hover:bg-[#101b2f]"
+          }`}
+          title="Toggle 3D Perspective Oblique View (60° Pitch)"
+        >
+          <span className="font-mono text-xs font-black">3D</span>
+        </button>
+        <div className="h-px w-full bg-[#18263e]" />
         <button
           onClick={() => mapRef.current?.zoomIn()}
           className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-[#101b2f] transition-colors"
