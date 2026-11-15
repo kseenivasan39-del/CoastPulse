@@ -12,13 +12,16 @@ import {
   Sparkles,
 } from "lucide-react";
 import { apiService } from "@/lib/apiClient";
+import { CoastalLocation } from "@/lib/geoUtils";
 
 interface RightIntelligenceSuiteProps {
+  activeLocation?: CoastalLocation | null;
   onJobCompleted?: (job: any) => void;
   inspectedPixel?: any;
 }
 
 export const RightIntelligenceSuite: React.FC<RightIntelligenceSuiteProps> = ({
+  activeLocation,
   onJobCompleted,
   inspectedPixel,
 }) => {
@@ -63,7 +66,9 @@ export const RightIntelligenceSuite: React.FC<RightIntelligenceSuiteProps> = ({
               <rect x="10" y="8" width="4" height="12" rx="1" />
               <rect x="17" y="4" width="4" height="16" rx="1" />
             </svg>
-            <span>Study Area Intelligence</span>
+            <span className="truncate max-w-[190px]">
+              {activeLocation ? activeLocation.name.split(" ")[0] + " Intelligence" : "Study Area Intelligence"}
+            </span>
           </div>
           <ChevronDown className="w-4 h-4 text-slate-400" />
         </div>
@@ -74,27 +79,61 @@ export const RightIntelligenceSuite: React.FC<RightIntelligenceSuiteProps> = ({
           <div className="p-2.5 rounded-xl bg-[#0c1628] border border-[#162742] flex flex-col justify-between">
             <div className="flex items-center gap-1.5 text-[#00e5ff] text-[11px] font-bold">
               <Droplets className="w-3.5 h-3.5 text-[#00e5ff]" />
-              <span>34,820 ha</span>
+              <span>
+                {activeLocation?.name.includes("Sundarbans")
+                  ? "420,000 ha"
+                  : activeLocation?.name.includes("Everglades")
+                  ? "380,000 ha"
+                  : activeLocation?.name.includes("Mekong")
+                  ? "850,000 ha"
+                  : "34,820 ha"}
+              </span>
             </div>
             <div className="text-[10px] text-slate-400 mt-1">Water Extent</div>
-            <div className="text-[9px] text-[#00e5ff] font-semibold mt-0.5">(+1,420 ha)</div>
+            <div className="text-[9px] text-[#00e5ff] font-semibold mt-0.5">
+              {activeLocation?.name.includes("Sundarbans")
+                ? "(+4,120 ha)"
+                : activeLocation?.name.includes("Everglades")
+                ? "(-680 ha)"
+                : activeLocation?.name.includes("Mekong")
+                ? "(+12,400 ha)"
+                : "(+1,420 ha)"}
+            </div>
           </div>
 
           {/* Card 2: Mangrove RVI */}
           <div className="p-2.5 rounded-xl bg-[#0c1628] border border-[#162742] flex flex-col justify-between">
             <div className="flex items-center gap-1.5 text-[#34d399] text-[11px] font-bold">
               <TreePine className="w-3.5 h-3.5 text-[#34d399]" />
-              <span>0.68</span>
+              <span>
+                {activeLocation?.name.includes("Sundarbans")
+                  ? "0.82"
+                  : activeLocation?.name.includes("Everglades")
+                  ? "0.74"
+                  : activeLocation?.name.includes("Wadden")
+                  ? "0.22"
+                  : "0.68"}
+              </span>
             </div>
-            <div className="text-[10px] text-slate-400 mt-1">Mangrove RVI</div>
-            <div className="text-[9px] text-[#34d399] font-semibold mt-0.5">(Healthy)</div>
+            <div className="text-[10px] text-slate-400 mt-1">Mangrove / RVI</div>
+            <div className="text-[9px] text-[#34d399] font-semibold mt-0.5">
+              {activeLocation?.name.includes("Wadden") ? "(Mudflat low)" : "(Healthy)"}
+            </div>
           </div>
 
           {/* Card 3: Wetland Extent */}
           <div className="p-2.5 rounded-xl bg-[#0c1628] border border-[#162742] flex flex-col justify-between">
             <div className="flex items-center gap-1.5 text-[#38bdf8] text-[11px] font-bold">
               <Layers className="w-3.5 h-3.5 text-[#38bdf8]" />
-              <span>48,600 ha</span>
+              <span>
+                {activeLocation?.name.includes("Sundarbans")
+                  ? "1,000,000 ha"
+                  : activeLocation?.name.includes("Everglades")
+                  ? "610,000 ha"
+                  : activeLocation?.name.includes("Mekong")
+                  ? "1,450,000 ha"
+                  : "48,600 ha"}
+              </span>
             </div>
             <div className="text-[10px] text-slate-400 mt-1">Wetland Extent</div>
           </div>
@@ -103,7 +142,15 @@ export const RightIntelligenceSuite: React.FC<RightIntelligenceSuiteProps> = ({
           <div className="p-2.5 rounded-xl bg-[#0c1628] border border-[#162742] flex flex-col justify-between">
             <div className="flex items-center gap-1.5 text-[#00e5ff] text-[11px] font-bold">
               <Waves className="w-3.5 h-3.5 text-[#00e5ff]" />
-              <span>187.9 km</span>
+              <span>
+                {activeLocation?.name.includes("Sundarbans")
+                  ? "310.0 km"
+                  : activeLocation?.name.includes("Everglades")
+                  ? "240.0 km"
+                  : activeLocation?.name.includes("Mekong")
+                  ? "650.0 km"
+                  : "187.9 km"}
+              </span>
             </div>
             <div className="text-[10px] text-slate-400 mt-1">Coastal Front</div>
           </div>

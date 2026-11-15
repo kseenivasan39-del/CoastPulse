@@ -180,7 +180,10 @@ export default function Home() {
 
         {/* Right Intelligence Suite Panel (Shown during Explore mode) */}
         {activeDestination === "explore" && (
-          <RightIntelligenceSuite inspectedPixel={inspectedPixel} />
+          <RightIntelligenceSuite
+            activeLocation={selectedLocation}
+            inspectedPixel={inspectedPixel}
+          />
         )}
       </div>
 
