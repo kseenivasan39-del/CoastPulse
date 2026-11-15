@@ -71,14 +71,18 @@ export default function Home() {
         {activeDestination === "explore" && (
           <LeftDataDrawer
             onObservationSelect={(obs) => {
-              if (obs.satellite === "NISAR") {
-                const naga = GLOBAL_COASTAL_OBSERVATORIES.find((l) => l.name.includes("Nagapattinam"));
-                if (naga) setSelectedLocation(naga);
+              const naga = GLOBAL_COASTAL_OBSERVATORIES.find((l) => l.name.includes("Nagapattinam"));
+              if (naga) {
+                setSelectedLocation(naga);
+                setLiveMapCoords(naga.coordinates);
               }
             }}
             onZoomToLayer={(layerId) => {
               const naga = GLOBAL_COASTAL_OBSERVATORIES.find((l) => l.name.includes("Nagapattinam"));
-              if (naga) setSelectedLocation(naga);
+              if (naga) {
+                setSelectedLocation(naga);
+                setLiveMapCoords(naga.coordinates);
+              }
             }}
           />
         )}

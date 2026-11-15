@@ -195,7 +195,13 @@ export const LeftDataDrawer: React.FC<LeftDataDrawerProps> = ({
   // Handle Layer Toggle
   const handleToggleLayer = (layer: LayerDefinition) => {
     if (!layer.isAvailable) return;
+    const nextState = !layerStore.getLayerState(layer.id).enabled;
     layerStore.toggleLayer(layer.id);
+
+    // If enabling a layer, trigger zoom to layer extent so user sees it immediately
+    if (nextState && onZoomToLayer) {
+      onZoomToLayer(layer.id);
+    }
   };
 
   // Handle Category Toggle
