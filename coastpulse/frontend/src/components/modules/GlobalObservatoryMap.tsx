@@ -18,9 +18,12 @@ import {
   Radio,
   Eye,
   Calendar,
+  Waves,
 } from "lucide-react";
 import { GLOBAL_COASTAL_OBSERVATORIES, CoastalLocation } from "@/lib/geoUtils";
 import { MapLayerController } from "@/lib/layerSystem";
+import { FloodInundationSlider } from "./FloodInundationSlider";
+import { ShorelineTransectPanel } from "./ShorelineTransectPanel";
 
 interface GlobalObservatoryMapProps {
   selectedLocation: CoastalLocation | null;
@@ -47,6 +50,14 @@ export const GlobalObservatoryMap: React.FC<GlobalObservatoryMapProps> = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [basemapMode, setBasemapMode] = useState<BasemapMode>("highres");
   const [showBasemapDropdown, setShowBasemapDropdown] = useState(false);
+
+  // New Feature 1: DSAS Shoreline Transect Drawer State
+  const [showTransectPanel, setShowTransectPanel] = useState<boolean>(false);
+
+  // New Feature 2: Animated Flood Inundation Surge Simulator State
+  const [showFloodSimulator, setShowFloodSimulator] = useState<boolean>(false);
+  const [simulatedWaterLevel, setSimulatedWaterLevel] = useState<number>(0.8);
+  const [isFloodLayerActive, setIsFloodLayerActive] = useState<boolean>(false);
 
   // Filtered coastal observatories
   const filteredObservatories = GLOBAL_COASTAL_OBSERVATORIES.filter(
@@ -280,6 +291,76 @@ export const GlobalObservatoryMap: React.FC<GlobalObservatoryMapProps> = ({
         },
       });
 
+      // Feature 1: DSAS Shoreline Transect Line Layer
+      map.addSource("dsas-transect-source", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              properties: { name: "DSAS Transect TR-04" },
+              geometry: {
+                type: "LineString",
+                coordinates: [
+                  [79.835, 10.772],
+                  [79.882, 10.758],
+                ],
+              },
+            },
+          ],
+        },
+      });
+
+      map.addLayer({
+        id: "dsas-transect-line",
+        type: "line",
+        source: "dsas-transect-source",
+        paint: {
+          "line-color": "#ff8c2b",
+          "line-width": 3,
+          "line-dasharray": [4, 2],
+        },
+      });
+
+      // Feature 2: Simulated Storm Surge Inundation Layer
+      map.addSource("surge-simulation-source", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              properties: { zone: "Tidal Lowland Buffer" },
+              geometry: {
+                type: "Polygon",
+                coordinates: [
+                  [
+                    [79.78, 10.82],
+                    [79.86, 10.82],
+                    [79.87, 10.72],
+                    [79.82, 10.65],
+                    [79.75, 10.70],
+                    [79.78, 10.82],
+                  ],
+                ],
+              },
+            },
+          ],
+        },
+      });
+
+      map.addLayer({
+        id: "surge-simulation-fill",
+        type: "fill",
+        source: "surge-simulation-source",
+        layout: { visibility: "none" },
+        paint: {
+          "fill-color": "#00e5ff",
+          "fill-opacity": 0.35,
+        },
+      });
+
       map.on("click", "observatory-points", (e) => {
         if (!e.features || !e.features[0]) return;
         const name = e.features[0].properties?.name;
@@ -338,6 +419,22 @@ export const GlobalObservatoryMap: React.FC<GlobalObservatoryMapProps> = ({
       map.setLayoutProperty("nasa-night-layer", "visibility", basemapMode === "nasa-night-lights" ? "visible" : "none");
     }
   }, [basemapMode, mapLoaded]);
+
+  // Synchronize dynamic flood inundation surge simulation on map
+  useEffect(() => {
+    if (!mapRef.current || !mapLoaded) return;
+    const map = mapRef.current;
+    if (map.getLayer("surge-simulation-fill")) {
+      map.setLayoutProperty(
+        "surge-simulation-fill",
+        "visibility",
+        isFloodLayerActive ? "visible" : "none"
+      );
+      // Dynamically scale opacity based on water level
+      const opacity = Math.min(0.7, 0.2 + (simulatedWaterLevel - 0.5) * 0.18);
+      map.setPaintProperty("surge-simulation-fill", "fill-opacity", opacity);
+    }
+  }, [isFloodLayerActive, simulatedWaterLevel, mapLoaded]);
 
   // Fly to selected location when changed
   useEffect(() => {
@@ -483,6 +580,43 @@ export const GlobalObservatoryMap: React.FC<GlobalObservatoryMapProps> = ({
 
       {/* 4. Right Map Navigation Stack */}
       <div className="absolute top-20 right-4 z-10 flex flex-col gap-1 p-1 rounded-xl bg-[#060c18]/90 backdrop-blur-md border border-[#14233c] shadow-xl">
+        {/* Feature 1 Button: DSAS Shoreline Transect Drawer */}
+        <button
+          onClick={() => {
+            setShowTransectPanel(!showTransectPanel);
+            if (!showTransectPanel && mapRef.current) {
+              mapRef.current.flyTo({ center: [79.855, 10.765], zoom: 12.5, duration: 1200 });
+            }
+          }}
+          className={`p-2 rounded-lg transition-all ${
+            showTransectPanel
+              ? "bg-[#ff8c2b] text-white shadow-lg shadow-[#ff8c2b]/30 font-bold"
+              : "text-slate-300 hover:text-white hover:bg-[#101b2f]"
+          }`}
+          title="Toggle DSAS Shoreline Transect Analysis"
+        >
+          <Compass className="w-4 h-4" />
+        </button>
+
+        {/* Feature 2 Button: Animated Storm Surge & Inundation Simulator */}
+        <button
+          onClick={() => {
+            const next = !showFloodSimulator;
+            setShowFloodSimulator(next);
+            if (next) setIsFloodLayerActive(true);
+          }}
+          className={`p-2 rounded-lg transition-all ${
+            showFloodSimulator
+              ? "bg-[#00e5ff] text-black shadow-lg shadow-[#00e5ff]/30 font-bold"
+              : "text-slate-300 hover:text-white hover:bg-[#101b2f]"
+          }`}
+          title="Toggle Animated Storm Surge & Flood Simulator"
+        >
+          <Waves className="w-4 h-4" />
+        </button>
+
+        <div className="h-px w-full bg-[#18263e]" />
+
         <button
           onClick={() => {
             const next3D = !is3DMode;
@@ -535,6 +669,29 @@ export const GlobalObservatoryMap: React.FC<GlobalObservatoryMapProps> = ({
           <Maximize2 className="w-4 h-4" />
         </button>
       </div>
+
+      {/* Interactive Overlay Panels for New Features */}
+      {showTransectPanel && (
+        <div className="absolute top-20 left-4 z-20">
+          <ShorelineTransectPanel
+            isOpen={showTransectPanel}
+            onClose={() => setShowTransectPanel(false)}
+            startCoord={[79.835, 10.772]}
+            endCoord={[79.882, 10.758]}
+          />
+        </div>
+      )}
+
+      {showFloodSimulator && (
+        <div className="absolute bottom-12 left-4 z-20">
+          <FloodInundationSlider
+            currentWaterLevel={simulatedWaterLevel}
+            onChangeWaterLevel={setSimulatedWaterLevel}
+            isActive={isFloodLayerActive}
+            onToggleActive={setIsFloodLayerActive}
+          />
+        </div>
+      )}
 
       {/* 5. Bottom Coordinates & Telemetry HUD */}
       <div className="absolute bottom-3 left-4 z-10 flex items-center gap-2 px-3 py-1 rounded-lg bg-[#060c18]/90 backdrop-blur-md border border-[#14233c] text-[10px] font-mono text-slate-300">

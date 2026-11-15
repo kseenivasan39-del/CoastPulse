@@ -18,7 +18,10 @@ import {
   Radio,
   Waves,
   Wind,
+  Download,
 } from "lucide-react";
+import { SituationReportModal } from "@/components/modules/SituationReportModal";
+import { GisExportModal } from "@/components/modules/GisExportModal";
 
 export type GlobalNavigationDestination =
   | "explore"
@@ -45,6 +48,8 @@ export const GlobalTopNav: React.FC<GlobalTopNavProps> = ({
   activeLocation,
   liveCoords,
 }) => {
+  const [showReportModal, setShowReportModal] = useState<boolean>(false);
+  const [showGisModal, setShowGisModal] = useState<boolean>(false);
   const [marineTelemetry, setMarineTelemetry] = useState<{
     wave_height_m: number;
     wind_speed_kmh: number;
@@ -177,6 +182,26 @@ export const GlobalTopNav: React.FC<GlobalTopNavProps> = ({
           </div>
         )}
 
+        {/* Feature 4 Button: GIS Data Export */}
+        <button
+          onClick={() => setShowGisModal(true)}
+          title="Export GeoJSON / GeoTIFF / CSV for GIS"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#0d182b] border border-[#1a2d4a] hover:border-cyan-400 text-slate-300 hover:text-white text-xs font-mono transition-colors"
+        >
+          <Download className="w-3.5 h-3.5 text-cyan-400" />
+          <span className="hidden sm:inline">GIS EXPORT</span>
+        </button>
+
+        {/* Feature 3 Button: Export Situation PDF Report */}
+        <button
+          onClick={() => setShowReportModal(true)}
+          title="Generate Official Delta Situation Report PDF"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#181109] border border-[#ff8c2b]/50 hover:border-[#ff8c2b] text-[#ff8c2b] hover:text-white text-xs font-mono transition-colors shadow-[0_0_10px_rgba(255,140,43,0.25)]"
+        >
+          <FileText className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">DELTA REPORT</span>
+        </button>
+
         <button
           onClick={() => onNavigate("catalogue")}
           title="Satellite Data Discovery"
@@ -195,6 +220,20 @@ export const GlobalTopNav: React.FC<GlobalTopNavProps> = ({
           <User className="w-3.5 h-3.5" />
         </div>
       </div>
+
+      {/* Situation Report Modal */}
+      <SituationReportModal
+        isOpen={showReportModal}
+        onClose={() => setShowReportModal(false)}
+        activeLocation={activeLocation}
+        marineTelemetry={marineTelemetry}
+      />
+
+      {/* GIS Export Modal */}
+      <GisExportModal
+        isOpen={showGisModal}
+        onClose={() => setShowGisModal(false)}
+      />
     </header>
   );
 };
